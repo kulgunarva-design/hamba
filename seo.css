@@ -1,0 +1,5 @@
+.site-links { display:flex; flex-wrap:wrap; gap:12px 24px; padding:0; margin:0 0 20px; list-style:none; }
+.site-links a { display:inline-block; padding:6px 0; color:#c9d0e9; }
+.site-links a:hover { color:#08e5df; }
+.site-links a:focus-visible, a.lang:focus-visible { outline:2px solid #08e5df; outline-offset:4px; }
+a.lang { display:inline-flex; align-items:center; justify-content:center; font-size:13px; }

@@ -9,8 +9,9 @@ const port = Number(process.env.PORT || 3000);
 const mode = process.env.SMS_MODE || 'preview';
 if (!['preview', 'live'].includes(mode)) throw new Error('SMS_MODE must be preview or live');
 const recipient = '+37253911527';
-const files = new Set(['index.html','about.html','services.html','contacts.html','booking.html','site.css','brand.css','booking.css','app.js','booking.js','contact-fix.js','sms-client.js','img/logo.jpg','img/laud-edited.png','clinic-photo.css','robots.txt','map.css','map.js']);
-const types = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.jpg':'image/jpeg','.png':'image/png','.txt':'text/plain'};
+const files = new Set(['index.html','about.html','services.html','contacts.html','booking.html','site.css','brand.css','booking.css','app.js','booking.js','contact-fix.js','sms-client.js','img/logo.jpg','img/laud-edited.png','clinic-photo.css','robots.txt','map.css','map.js','seo.css','sitemap.xml']);
+for (const language of ['ru','en']) for (const page of ['index.html','services.html','about.html','contacts.html','booking.html']) files.add(language + '/' + page);
+const types = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.jpg':'image/jpeg','.png':'image/png','.txt':'text/plain','.xml':'application/xml; charset=utf-8'};
 let recent = [];
 const server = http.createServer(async (req, res) => {
   const reply = (status, data) => { res.writeHead(status, {'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}); res.end(JSON.stringify(data)); };
@@ -40,7 +41,7 @@ const server = http.createServer(async (req, res) => {
       return reply(200, {mode:'live',status:'accepted'});
     }
     if (!['GET','HEAD'].includes(req.method)) return reply(405, {error:'method'});
-    const file = pathname === '/' ? 'index.html' : pathname.slice(1);
+    const file = pathname.endsWith('/') ? pathname.slice(1) + 'index.html' : pathname.slice(1);
     if (!files.has(file)) return reply(404, {error:'not_found'});
     const contents = await readFile(path.join(root, file));
     res.writeHead(200, {'Content-Type':types[path.extname(file)] || 'application/octet-stream','X-Content-Type-Options':'nosniff'});
